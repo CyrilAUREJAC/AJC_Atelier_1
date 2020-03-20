@@ -1,0 +1,46 @@
+CAPTURE 1
+
+1/
+
+curl http://capgchamb11.goffinet.net:8003
+
+{
+  name: "capgchamb1.goffinet.net"
+  ipv4: "51.15.198.172"
+}
+
+Curl est un outils permettant le transfert de data d'une url à notre terminal via TCP/HTTP.
+On remarquera le flux TCP : Initialisation en 3 étapes (SYN/SYN ACK/ACK) et finition en 4 étapes.
+
+2/ cf capture1
+
+3/ from 50127 to 8003
+
+4/ n°8 GET
+
+5/ paquet n°5 SYN => paquet n°15 ACK
+
+CAPTURE 2
+
+1/
+
+dig @ns1.google.com -t TXT o-o.myaddr.l.google.com +short -4
+
+90.112.1.187
+
+Dig permet de diagnostiquer les dysfonctionnements dans la résolution de nom. On va demander des infos à un serveur DNS.
+Ici on demande une information texte (TXT) : a qui appartient o-o.myaddr.l.google.com ? Quelles est son IPv4 ?
+
+2/ cf capture 2
+
+3/ 5 frames mais 1 est en double (lignes 3 et 4). Donc 4.
+Avant d'atteindre google.com, l'ordinateur a besoin de connaître qui est le destinataire. Il pose la question d'abord au routeur. On a le nom mais pas l'adresse.
+DNS fonctionne en UDP (donc pas d'initialisation/finalisation).
+
+4/ et 5/
+
+Trame 1 : on demande à la passerelle qui est ns.google.com (serveur DNS)
+Trame 2 : la passerelle répond que c'est 216.239.32.10
+Trame 3/4 : On pose la question directement à 216.239.32.10 : a qui appartient o-o.myaddr.l.google.com ?
+Trame 5 : 216.239.32.10 nous répond avec l'info demandée
+Trame 6/7 : table ARP
